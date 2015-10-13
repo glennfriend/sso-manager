@@ -1,0 +1,69 @@
+<?php
+
+    $items = getAllKeyExpire($memcache, true);
+    $memcache->close();
+
+    /**
+     *  get all key and key expire
+     *  @return array or empty array
+     */
+    function getAllKeyExpire( $memcache, $isFormat=false )
+    {
+        // check memcache server
+        if ( !$memcache->getversion() ) {
+            return array();
+        }
+
+        $list = array();
+        $allSlabs = $memcache->getExtendedStats('slabs');
+
+        foreach ($allSlabs as $server => $slabs) {
+            foreach ($slabs as $slabId => $slabMeta) {
+
+                try {
+                    $cdump = $memcache->getExtendedStats('cachedump', (int) $slabId );
+                } catch (Exception $e) {
+                    continue;
+                }
+
+                foreach ($cdump as $keys => $arrVal) {
+                    if (!is_array($arrVal)) {
+                        continue;
+                    }
+                    foreach ($arrVal as $k => $v) {
+                        if ( $isFormat ) {
+                            $list[$k] = date("Y-m-d H:i:s", $v[1]);
+                        }
+                        else {
+                            $list[$k] = $v[1];
+                        }
+                    }
+                }
+            }
+        }
+        return $list;
+    }
+
+?>
+
+    <table class="table table-striped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th style="width:360px">Key</th>
+                <th>Expire Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php 
+            foreach ( $items as $key => $expireDate ) {
+                $url = url('systemic/memcache', array('type'=>'value','key'=>$key) );
+                echo "<tr>";
+                echo "<td><a href=\"{$url}\">{$key}</a></td>";
+                echo "<td>{$expireDate}</td>";
+                echo "</tr>";
+            }
+        ?>
+        </tbody>
+    </table>
+
+

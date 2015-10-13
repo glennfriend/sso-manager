@@ -1,0 +1,10 @@
+<?php
+
+    $content = print_r($memcache->getStats(), true);
+    $memcache->close();
+
+?>
+
+    <div class="form-group">
+        <pre><?php echo $content; ?></pre>
+    </div>

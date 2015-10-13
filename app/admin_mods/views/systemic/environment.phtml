@@ -1,0 +1,61 @@
+
+    <h1><?php echo $label; ?></h1>
+    <hr/>
+
+    <div class="form-group">
+        <label for="">date_default_timezone_get()</label>
+        <pre><?php echo date_default_timezone_get(); ?></pre>
+    </div>
+
+    <div class="form-group">
+        <label for="">ini_get('date.timezone')</label>
+        <pre><?php echo ini_get('date.timezone'); ?></pre>
+    </div>
+
+    <div class="form-group">
+        <label for="">Current</label>
+        <pre><?php echo date("Y-m-d H:i:s (w)"); ?></pre>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-11">
+
+            <?php setTimezone('UTC'); ?>
+            <div class="form-group">
+                <label for=""><?php echo ini_get('date.timezone'); ?></label>
+                <pre><?php echo date("Y-m-d H:i:s (w)"); ?></pre>
+            </div>
+
+            <?php setTimezone('Asia/Taipei'); ?>
+            <div class="form-group">
+                <label for=""><?php echo ini_get('date.timezone'); ?> (UTC+8) </label>
+                <pre><?php echo date("Y-m-d H:i:s (w)"); ?></pre>
+            </div>
+
+            <?php setTimezone('America/Los_Angeles'); ?>
+            <div class="form-group">
+                <label for=""><?php echo ini_get('date.timezone'); ?> (UTC-7) </label>
+                <pre><?php echo date("Y-m-d H:i:s (w)"); ?></pre>
+            </div>
+            <span>★如果以上的 timezone 都相同, 表示主機無法正確設定</span>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="">Server API</label>
+        <pre><?php echo php_sapi_name(); ?></pre>
+    </div>
+    <div>"apache2handler"       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => Apache2 + mod_php</div>
+    <div>"Apache *.* Handler"   &nbsp;                         => mod_php</div>
+    
+<?php
+
+    function setTimezone( $zone )
+    {
+        date_default_timezone_set($zone);
+        ini_set('date.timezone', $zone);
+    }
+
+

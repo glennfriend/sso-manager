@@ -1,0 +1,44 @@
+<?php
+
+    $value = null;
+    $key = trim(InputBrg::get('key'));
+    if( $key ) {
+        $value = $memcache->get( $key );
+    }
+    $memcache->close();
+
+    if ( is_array($value) ) {
+        $content = print_r($value, true );
+    }
+    else {
+        try {
+            $content = print_r(unserialize($value), true );
+        }
+        catch( Exception $e ) {
+            $content = '不解析';
+        }
+    }
+
+?>
+
+    <div class="form-group">
+        <label for="">Key</label>
+        <pre><?php
+            echo htmlspecialchars($key);
+        ?></pre>
+        <label for="">Value</label>
+        <pre><?php
+            if ( is_array($value) ) {
+                echo $value;
+            }
+            elseif ( is_object($value) ) {
+                echo $value;
+            }
+            else {
+                echo htmlspecialchars($value);
+            }
+        ?></pre>
+        <pre><?php
+            echo htmlspecialchars($content);
+        ?></pre>
+    </div>

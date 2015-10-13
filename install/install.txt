@@ -1,0 +1,29 @@
+
+Environment
+
+    Apache
+    PHP 5.5
+
+phpbrew install
+
+     phpbrew install 5.5.* +default +mysql +pdo +curl +gd +json +apxs2=/usr/bin/apxs2 +openssl=/usr/include/openssl/opensslv.h -- --enable-ftp --with-gd=shared
+     phpbrew ext install https://github.com/phalcon/cphalcon
+     phpbrew ext install incov curl
+
+composer install
+
+    @see https://getcomposer.org
+
+    cd composer
+    composer self-update
+    composer update
+
+init
+
+    mkdir var/cache
+    chmod -R 777 var
+
+    cp app/config/template/* app/config/
+    編輯所有的設定檔
+ 
+

@@ -1,0 +1,84 @@
+<?php
+
+    if ( !class_exists('Memcache') ) {
+        die('Memcache not found.');
+    }
+
+    $memcache = new Memcache;
+    $memcache->addServer(Config::get('cache.memcache.host'), Config::get('cache.memcache.port'));
+
+    if ( @ !$memcache->getversion() ) {
+        echo "Memcache can't get information.<br>\n";
+        echo "無法取得資料, 請確認 memcache 是否有啟動";
+        exit;
+    }
+
+    // $version = $memcache->getversion();
+
+    /*
+    // memcache 
+    $memcache->setfailurecallback(function( $server, $host ){
+        return null;
+    });
+    */
+
+    // button style
+    $buttonStyle = array(
+        'status' => '',
+        'items'  => '',
+        'value'  => '',
+    );
+
+    // button url
+    $buttonUrl = array(
+        'status' => url('systemic/memcache', array('type'=>'status') ),
+        'items'  => url('systemic/memcache', array('type'=>'items')  ),
+        'value'  => url('systemic/memcache', array('type'=>'value')  ),
+    );
+
+    $type = trim(InputBrg::get('type'));
+    switch ($type) {
+        case 'items':
+        case 'value':
+            $buttonStyle[$type] = 'btn-primary';
+            break;
+        default:
+            $buttonStyle['status'] = 'btn-primary';
+            break;
+    }
+
+?>
+
+    <div class="form-group">
+        <?php $url = url('systemic/memcache', array('type'=>'status')); ?>
+        <button
+                class="<?php echo $buttonStyle['status']; ?>"
+                onclick="window.location.href='<?php echo $buttonUrl['status'] ?>';" >Status</button>
+
+        <?php $url = url('systemic/memcache', array('type'=>'items')); ?>
+        <button
+                class="<?php echo $buttonStyle['items']; ?>"
+                onclick="window.location.href='<?php echo $buttonUrl['items'] ?>';" >Items</button>
+
+        <?php if ($buttonStyle['value']): ?>
+            <button class="<?php echo $buttonStyle['value']; ?>" disabled >Key-Value</button>
+        <?php endif; ?>
+
+    </div>
+
+
+<?php
+
+    switch ($type) {
+        case 'items':
+            include 'memcache-items.phtml';
+            break;
+        case 'value':
+            include 'memcache-value.phtml';
+            break;
+        default:
+            include 'memcache-status.phtml';
+            break;
+    }
+
+

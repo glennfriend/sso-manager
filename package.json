@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "jquery": "^2.1.*",
+    "jquery.cookie": "^1.4.*",
+    "bootstrap": "^3.3.*",
+    "font-awesome": "^4.4.*",
+    "d3": "^3.5.*",
+    "gulp": "~3.9.*"
+  }
+}
