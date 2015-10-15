@@ -2,9 +2,20 @@
 
 class ControllerBase extends Phalcon\Mvc\Controller
 {
-
-    protected function initialize()
+    /**
+     *  請不要覆寫該 method
+     *
+     *      - 驗証登入者
+     *      - 設定該 module 環境
+     *      - 設定 assets
+     */
+    protected function beforeExecuteRoute()
     {
+        if ( !UserIdentity::isLogin() ) {
+            $this->redirect('');
+            return false;
+        }
+
         RegisterManager::set('title','Gear Admin');
 
         $this->assets
@@ -24,24 +35,8 @@ class ControllerBase extends Phalcon\Mvc\Controller
         logBrg::backend( $this->dispatcher->getControllerName(), $this->dispatcher->getActionName() );
     }
 
-    /**
-     *
-     */
-    protected function beforeExecuteRoute()
-    {
-        if ( !UserIdentity::isLogin() ) {
-            $this->redirect('');
-            return false;
-        }
-    }
-
-    /**
-     *
-     */
-    // public function afterExecuteRoute($dispatcher)
-    // {
-    //     
-    // }
+     // public function initialize() {}
+     // public function afterExecuteRoute($dispatcher) {}
 
     /**
      *  forword
@@ -64,7 +59,6 @@ class ControllerBase extends Phalcon\Mvc\Controller
      */
     protected function redirectMainPage()
     {
-        $this->view->disable();
         $this->redirect('');
     }
 
@@ -72,12 +66,11 @@ class ControllerBase extends Phalcon\Mvc\Controller
      *  recirect to main page
      *  會改變網址
      */
-    protected function redirect( $route, $params=array() )
+    protected function redirect($route, $params=[])
     {
-
         // 有參數的情況, route 要做一些調整
         // 由於 response 沒有吃參數, 所以要自己組好
-        if ( $params ) {
+        if ($params) {
             $baseUri = $this->url->getBaseUri();
             $this->url->setBaseUri('');
             $route = $this->url->get( $route, $params );
@@ -89,5 +82,9 @@ class ControllerBase extends Phalcon\Mvc\Controller
         $this->response->redirect( $route );
         return;
     }
+
+    // --------------------------------------------------------------------------------
+    // 
+    // --------------------------------------------------------------------------------
 
 }

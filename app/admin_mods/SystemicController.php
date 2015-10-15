@@ -3,9 +3,8 @@
 class SystemicController extends ControllerBase
 {
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
         MenuManager::setMainKey('systemic');
 
         if( !UserManager::isAdmin() ) {
@@ -67,6 +66,15 @@ class SystemicController extends ControllerBase
         MenuManager::setSubKey('phalcon');
         $this->view->setVars(Array(
             'label' => 'Phalcon',
+        ));
+    }
+
+
+    public function GearmanAction()
+    {
+        MenuManager::setSubKey('gearman');
+        $this->view->setVars(Array(
+            'label' => 'Gearman',
         ));
     }
 

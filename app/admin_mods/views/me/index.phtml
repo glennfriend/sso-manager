@@ -13,10 +13,6 @@
         </thead>
         <tbody>
             <tr>
-                <td>ID</td>
-                <td><?php echo $user->getId(); ?></td>
-            </tr>
-            <tr>
                 <td>Account</td>
                 <td><?php echo $user->getAccount(); ?></td>
             </tr>
@@ -25,12 +21,8 @@
                 <td><?php echo $user->getEmail(); ?></td>
             </tr>
             <tr>
-                <td>Role </td>
+                <td>Roles</td>
                 <td><?php echo join(", ", $user->getRoleDescriptions() ); ?></td>
-            </tr>
-            <tr>
-                <td>Modify my password</td>
-                <td><a href="<?php echo url('me/password'); ?>">edit</a></td>
             </tr>
             <?php
                 if( UserManager::isAdmin() ) {
@@ -64,11 +56,6 @@
         echo '<li>__FILE__ = '.   __FILE__ .'</li>';
         echo '<li>login_user_info_string = '. SessionBrg::get('login_user_info_string') .'</li>';
         echo '</ul>';
-
-        // $cartUrl = 'http://' . $_SERVER['HTTP_HOST'] . APPLICATION_SHOP_URI . '/cart.php';
-        // $cartContent = file_get_contents($cartUrl);
-        // echo $cartContent;
-
         echo '<pre style="color:#000;text-align:left;font-size:10px;font-family:dina,GulimChe;">'; print_r( $_SESSION ); echo "</pre>\n";
     }
 

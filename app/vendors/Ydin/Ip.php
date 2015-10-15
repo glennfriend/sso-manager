@@ -49,7 +49,7 @@ class Ip
      *  
      *  @return float 
      */
-    public function ipToLong( $ipString )
+    public static function ipToLong( $ipString )
     {
         $ip = explode('.', $ipString );
 

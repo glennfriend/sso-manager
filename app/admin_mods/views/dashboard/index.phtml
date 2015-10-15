@@ -1,6 +1,64 @@
 <?php
 
-    echo '--------------------------------------------------------------------------------<br />';
-    echo 'dashboard <br />';
-    echo '--------------------------------------------------------------------------------<br />';
+    $messages = [];
+    $messages[] = getLastChangePassword();
+    $messages[] = getLastLoginFail();
+    $messages = array_filter($messages);
 
+    if (!$messages) {
+        $messages[] = 'Peace';
+    }
+
+    echo '<ul>';
+    foreach ($messages as $message) {
+        echo "<li><h3>{$message}</h3></li>";
+    }
+    echo "</ul>";
+
+
+
+
+    function getLastLoginFail()
+    {
+        $userLogs = new UserLogs();
+        $logs = $userLogs->findUserLogs([
+            'userId'        => UserManager::getUser()->getId(),
+            'actions'       => 'login-fail',
+            '_order'        => 'id,desc',
+            '_itemsPerPage' => 1,
+        ]);
+
+        if (!$logs) {
+            return;
+        }
+
+        $createTime = $logs[0]->getCreateTime();
+        $days = 86400 * 3;
+        if ( time() - $createTime <= $days ) {
+            $url = url('me/logs', ["actions"=>'login-fail']);
+            return '最近一次的 <a href="'. $url .'">登入失敗</a> 於 ' . date('M/d (w) H:i:s', $createTime) . ' by ' . $logs[0]->getIp();
+        }
+    }
+
+    function getLastChangePassword()
+    {
+        $userLogs = new UserLogs();
+        $logs = $userLogs->findUserLogs([
+            'userId'        => UserManager::getUser()->getId(),
+            'actions'       => 'password-update',
+            '_order'        => 'id,desc',
+            '_itemsPerPage' => 1,
+        ]);
+
+        if (!$logs) {
+            $url = url('me/password');
+            return '如果您是第一次登入, 請務必 <a href="'. $url .'">更新</a> 自己的密碼';
+        }
+
+        $changePasswordTime = $logs[0]->getCreateTime();
+        $days = 86400 * 30;
+        if ( time() >= $changePasswordTime + $days ) {
+            $url = url('me/password');
+            return '每經過一次滿月, 請記得要 <a href="'. $url .'">更新</a> 自己的密碼喔~';
+        }
+    }

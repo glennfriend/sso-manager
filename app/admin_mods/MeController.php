@@ -3,14 +3,16 @@
 class MeController extends ControllerBase
 {
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        MenuManager::setMainKey('about-me');
         $this->user = UserManager::getUser();
     }
 
     public function indexAction()
     {
+        MenuManager::setSubKey('about-myself');
+
         $password    = InputBrg::get('password');
         $password2   = InputBrg::get('password2');
         $oldPassword = InputBrg::get('oldPassword');
@@ -67,6 +69,8 @@ class MeController extends ControllerBase
      */
     public function passwordAction()
     {
+        MenuManager::setSubKey('modify-password');
+
         $password    = InputBrg::get('password');
         $password2   = InputBrg::get('password2');
         $oldPassword = InputBrg::get('oldPassword');
@@ -108,6 +112,7 @@ class MeController extends ControllerBase
             else {
                 $users = new Users();
                 $users->updateUser($user);
+                UserLogHelper::addChangePassword();
                 FormMessageManager::addSuccessResultMessage('修改成功');
                 $this->redirect('me');
                 return;
@@ -115,6 +120,48 @@ class MeController extends ControllerBase
 
         }
 
+    }
+
+    /**
+     *
+     */
+    public function logsAction()
+    {
+        MenuManager::setSubKey('show-logs');
+        $page   = (int) InputBrg::get('page');
+        $actions = InputBrg::get('actions');
+
+        $allActions = [
+            ['All',             null                            ],
+            ['Log in + out',    'login-success,logout-success'  ],
+            ['Log In Fail',     'login-fail'                    ],
+            ['Password Change', 'password-update'               ],
+        ];
+
+        $options = array_filter(array(
+            'userId'    => UserManager::getUser()->getId(),
+          //'actions'   => ( isset($action) ? $action : null ),
+            'actions'   => $actions,
+            '_page'     => $page
+        ));
+        $userLogs   = new UserLogs();
+        $myUserLogs = $userLogs->findUserLogs( $options );
+        $rowCount   = $userLogs->numFindUserLogs( $options );
+
+        $pageLimit = new PageLimit();
+        $pageLimit->setBaseUrl('me');  // 請使用完整的 mca 命名
+        $pageLimit->setRowCount( $rowCount );
+        $pageLimit->setPage( $page );
+        $pageLimit->setparams([
+            'actions' => $actions,
+        ]);
+
+        $this->view->setVars(array(
+            'userLogs'  => $myUserLogs,
+            'pageLimit' => $pageLimit,
+            'actionsKey' => $actions,
+            'allActions' => $allActions,
+        ));
     }
 
     /**
