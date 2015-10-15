@@ -42,7 +42,7 @@ class UserIdentity
 
         // setting basic config
         SessionBrg::set('account_id', $user->getId() );
-        SessionBrg::set('login_user_info_string', self::getUserInfoHash() );
+        SessionBrg::set('login_user_agent', self::getUserInfoHash() );
 
         // custom setting
         // 注意, 以下的程式要放在此 method 最後面
@@ -105,7 +105,7 @@ class UserIdentity
         if ( !$hash ) {
             return false;
         }
-        if ( $hash !== SessionBrg::get('login_user_info_string') ) {
+        if ( $hash !== SessionBrg::get('login_user_agent') ) {
             return false;
         }
         return true;

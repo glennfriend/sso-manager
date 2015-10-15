@@ -54,7 +54,7 @@
         echo '<ul>';
         echo '<li>class name = '. get_class($this) .'</li>';
         echo '<li>__FILE__ = '.   __FILE__ .'</li>';
-        echo '<li>login_user_info_string = '. SessionBrg::get('login_user_info_string') .'</li>';
+        echo '<li>login_user_agent = '. SessionBrg::get('login_user_agent') .'</li>';
         echo '</ul>';
         echo '<pre style="color:#000;text-align:left;font-size:10px;font-family:dina,GulimChe;">'; print_r( $_SESSION ); echo "</pre>\n";
     }
