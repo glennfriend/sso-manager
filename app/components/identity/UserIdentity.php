@@ -47,7 +47,7 @@ class UserIdentity
         // custom setting
         // 注意, 以下的程式要放在此 method 最後面
         // 依照情況設定
-        if( UserManager::isAdmin() ) {
+        if( UserManager::isDeveloper() ) {
             UserManager::setDebugMode(true);
         }
         return true;

@@ -25,7 +25,7 @@
                 <td><?php echo join(", ", $user->getRoleDescriptions() ); ?></td>
             </tr>
             <?php
-                if( UserManager::isAdmin() ) {
+                if( UserManager::isDeveloper() ) {
                     if( UserManager::isDebugMode() ) {
                         $text = '切換為一般模式';
                         $changeEnvironmentUrl = url('me/changeEnvironment', array('isDeveloper'=>0) );

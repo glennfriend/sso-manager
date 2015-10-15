@@ -84,13 +84,13 @@ class UserManager
 
     /**
      *  設定開發環境模式
-     *  如果 role name 權限未達 `manager` , 將無法設定成功
+     *  如果 role name 權限未達 `developer` , 將無法設定成功
      *
      *  @param boolean mode
      */
     public static function setDebugMode( $mode )
     {
-        if( !UserManager::isAdmin() ) {
+        if( !UserManager::isDeveloper() ) {
             return;
         }
 
