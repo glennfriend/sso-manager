@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-define('APP_PORTAL','admin');
+define('APP_PORTAL','home');
 require_once dirname(dirname(__FILE__)).'/init.php';
 
 try {

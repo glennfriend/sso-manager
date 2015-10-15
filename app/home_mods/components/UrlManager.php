@@ -2,7 +2,6 @@
 
 /**
  *  路徑管理
- *
  */
 class UrlManager
 {

@@ -2,36 +2,41 @@
 
 class ControllerBase extends Phalcon\Mvc\Controller
 {
-
-    protected function initialize()
+    /**
+     *  請不要覆寫該 method
+     *
+     *      - 驗証登入者
+     *      - 設定該 module 環境
+     *      - 設定 assets
+     */
+    protected function beforeExecuteRoute()
     {
-        $this->assets
-            ->addJs('dist/jquery/jquery-1.11.1.js')
-            ->addJs('dist/bootstrap/js/bootstrap.js');
-
-        $this->assets
-            ->addCss('dist/bootstrap/css/bootstrap.css');
-
-        logBrg::frontend( $this->dispatcher->getControllerName(), $this->dispatcher->getActionName() );
-    }
-
-    // This is executed before every found action
-    public function beforeExecuteRoute($dispatcher)
-    {
-        /*
-        if ($dispatcher->getActionName() == 'index') {
-            $this->flash->error("hello all index");
-            exit;
-            //return false; ?????????
+        if ( !UserIdentity::isLogin() ) {
+            $this->redirect('');
+            return false;
         }
-        */
+
+        RegisterManager::set('title','Gear Admin');
+
+        $this->assets
+            ->addJs('assets/jquery/jquery.js')
+            ->addJs('assets/bootstrap/js/bootstrap.js')
+            ->addJs('dist/phpjs/phpjs.js')
+            ->addJs('dist/aid/aid.effect.js')
+            ->addJs('dist/aid/aid.event.js')
+            ->addJs('dist/aid/aid.ui.js')
+            ->addJs('dist/app.js');
+
+        $this->assets
+            ->addCss('assets/bootstrap/css/bootstrap.css')
+//          ->addCss('assets/font-awesome/css/font-awesome.css')
+            ->addCss('dist/custom_with_famfamfam_icons/fam-icons.css');
+
+        logBrg::backend( $this->dispatcher->getControllerName(), $this->dispatcher->getActionName() );
     }
 
-    // Executed after every found action
-    public function afterExecuteRoute($dispatcher)
-    {
-        
-    }
+     // public function initialize() {}
+     // public function afterExecuteRoute($dispatcher) {}
 
     /**
      *  forword
@@ -61,21 +66,25 @@ class ControllerBase extends Phalcon\Mvc\Controller
      *  recirect to main page
      *  會改變網址
      */
-    protected function redirect( $route, $params=array() )
+    protected function redirect($route, $params=[])
     {
         // 有參數的情況, route 要做一些調整
         // 由於 response 沒有吃參數, 所以要自己組好
-        if ( $params ) {
+        if ($params) {
             $baseUri = $this->url->getBaseUri();
             $this->url->setBaseUri('');
             $route = $this->url->get( $route, $params );
             $this->url->setBaseUri( $baseUri );
         }
-    
+
         // 重定向不會禁用視圖組件。因此視圖將正常顯示。你可以使用 $this->view->disable() 禁用視圖輸出。
         $this->view->disable();
         $this->response->redirect( $route );
         return;
     }
+
+    // --------------------------------------------------------------------------------
+    // 
+    // --------------------------------------------------------------------------------
 
 }

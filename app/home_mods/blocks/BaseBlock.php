@@ -48,11 +48,31 @@ class BaseBlock
             return null;
         }
 
-        ob_start();
-            include $file;
-            $tmp = ob_get_contents();
-        ob_end_clean();
-        return $tmp;
+        try {
+
+            ob_start();
+                include($file);
+                $tmp = ob_get_contents();
+            ob_end_clean();
+            return $tmp;
+
+        }
+        catch( \Exception $e ) {
+
+            $traces = $e->getTrace();
+            $errorMessage = "Block Error - {$traces[0]['file']}:{$traces[0]['line']} - {$e->getMessage()}";
+            \LogBrg::error($errorMessage);
+
+            if (\SessionBrg::get('is_debug')) {
+                echo $errorMessage;
+            }
+            else {
+                echo $e->getMessage();
+            }
+            exit;
+
+        }
+
     }
 
     /**

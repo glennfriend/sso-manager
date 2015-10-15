@@ -3,6 +3,12 @@
     SessionBrg::init($di);
     CookiesBrg::init($di);
 
+    // menu
+    $getMenu = function() {
+        require_once Config::get('home.base.path') . '/app/'. APP_PORTAL .'_mods/setting/menu.php';
+    };
+    $getMenu();
+
     /**
      *  zend loader
      */
